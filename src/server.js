@@ -8,25 +8,18 @@ const app = express();
 app.use(express.json());
 
 
-app.post("/ask", async(req,res)=>{
-
+app.post("/ask", async (req, res) => {
   try {
-
-    const result =
-      await askGita(req.body.question);
-
-    res.json(result);
-
-  } catch(error){
-
-    console.error(error);
+    const answer = await chat(req.body.question);
+    res.json(answer);
+  } catch (err) {
+    console.error("ASK ERROR:", err);
+    console.error(err.stack);
 
     res.status(500).json({
-      error:"Something went wrong"
+      error: err.message,
     });
-
   }
-
 });
 
 
