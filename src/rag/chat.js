@@ -8,7 +8,11 @@ const groq = new Groq({
 
 export async function askGita(question) {
 
+
+  console.log("ASK START");
   const verses = await searchVerses(question);
+
+  console.log("SEARCH COMPLETE");
 
 
   const context = verses.map(v => `
@@ -21,7 +25,7 @@ Purport:
 ${v.purport.substring(0, 800)}
 `).join("\n\n---\n\n");
 
-
+ console.log("CALLING GROQ");
   const response = await groq.chat.completions.create({
 
     model: "llama-3.3-70b-versatile",
@@ -63,7 +67,7 @@ ${context}
       }
     ]
   });
-
+ console.log("GROQ RESPONSE RECEIVED");
 
   return {
     answer: response.choices[0].message.content,
