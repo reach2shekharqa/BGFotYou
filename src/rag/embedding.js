@@ -1,23 +1,3 @@
-import { pipeline } from "@xenova/transformers";
-
-let extractor;
-
-export async function loadModel() {
-
-  if (!extractor) {
-    console.log("Loading embedding model...");
-
-    extractor = await pipeline(
-      "feature-extraction",
-      "Xenova/bge-base-en-v1.5"
-    );
-
-    console.log("Embedding model ready");
-  }
-
-}
-
-
 export async function createEmbedding(text) {
 
   const response = await fetch(
@@ -29,28 +9,47 @@ export async function createEmbedding(text) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        inputs: `query: ${text}`
+        inputs: `query: ${text}`,
+        options: {
+          wait_for_model: true
+        }
       })
     }
   );
 
+  const data = await response.json();
+
+  console.log(
+    "HF RESPONSE:",
+    JSON.stringify(data).slice(0, 300)
+  );
+
   if (!response.ok) {
     throw new Error(
-      `Embedding API failed: ${response.status} ${await response.text()}`
+      `Embedding API failed: ${JSON.stringify(data)}`
     );
   }
 
-  const data = await response.json();
 
-console.log("HF embedding response:", JSON.stringify(data).slice(0,200));
+  // HF sometimes returns nested arrays
+  if (Array.isArray(data) && Array.isArray(data[0])) {
+    return data[0];
+  }
 
-if (Array.isArray(data[0])) {
-  return data[0];
-}
 
-if (data.embedding) {
-  return data.embedding;
-}
+  // Some providers return { embedding: [] }
+  if (data.embedding) {
+    return data.embedding;
+  }
 
-return data;
+
+  // Direct array response
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+
+  throw new Error(
+    "Unexpected HuggingFace embedding response format"
+  );
 }
