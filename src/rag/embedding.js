@@ -20,15 +20,27 @@ export async function loadModel() {
 
 export async function createEmbedding(text) {
 
-  await loadModel();
-
-  const output = await extractor(
-    `query: ${text}`,
+  const response = await fetch(
+    "https://router.huggingface.co/hf-inference/models/BAAI/bge-base-en-v1.5",
     {
-      pooling: "mean",
-      normalize: true
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.HF_TOKEN}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        inputs: `query: ${text}`
+      })
     }
   );
 
-  return Array.from(output.data);
+  if (!response.ok) {
+    throw new Error(
+      `Embedding API failed: ${response.status} ${await response.text()}`
+    );
+  }
+
+  const data = await response.json();
+
+  return data[0];
 }
