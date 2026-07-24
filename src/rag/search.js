@@ -6,7 +6,7 @@ export async function searchVerses(question) {
 
   const embedding = await createEmbedding(question);
 
-  const vector = `[${embedding.join(",")}]`;
+ const vector = `[${embedding.join(",")}]`;
 
 const result = await pool.query(
  `

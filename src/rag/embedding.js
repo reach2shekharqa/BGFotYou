@@ -42,5 +42,15 @@ export async function createEmbedding(text) {
 
   const data = await response.json();
 
+console.log("HF embedding response:", JSON.stringify(data).slice(0,200));
+
+if (Array.isArray(data[0])) {
   return data[0];
+}
+
+if (data.embedding) {
+  return data.embedding;
+}
+
+return data;
 }
