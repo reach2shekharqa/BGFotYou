@@ -18,7 +18,7 @@ Translation:
 ${v.translation}
 
 Purport:
-${v.purport.substring(0, 1200)}
+${v.purport.substring(0, 800)}
 `).join("\n\n---\n\n");
 
 

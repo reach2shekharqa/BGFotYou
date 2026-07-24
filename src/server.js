@@ -7,6 +7,13 @@ const app = express();
 
 app.use(express.json());
 
+app.get("/health", (req,res)=>{
+  res.json({
+    status:"UP",
+    service:"Bhagavad Gita AI"
+  });
+});
+
 
 app.post("/ask", async (req, res) => {
   try {
