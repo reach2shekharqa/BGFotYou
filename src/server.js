@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import { askGita } from "./rag/chat.js";
-
+import { getVerseOfTheDay } from "./rag/home.js";
 
 const app = express();
 
@@ -44,42 +44,34 @@ app.post("/ask", async (req, res) => {
 
 app.get("/home", async (req, res) => {
 
-  try {
+    try {
 
-    res.json({
+        const verse = await getVerseOfTheDay();
 
-      verseOfDay: {
+        res.json({
 
-        chapter: 2,
+            verseOfDay: {
 
-        verse: 47,
+                chapter: verse.chapter,
+                chapter_title: verse.chapter_title,
+                verse: verse.verse,
+                transliteration: verse.transliteration,
+                translation: verse.translation,
+                purport: verse.purport
 
-        sanskrit:
-        "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन",
+            }
 
-        translation:
-        "You have the right to perform your duty, but not to the fruits of action.",
+        });
 
-        message:
-        "Focus on your actions and surrender the results."
+    } catch (err) {
 
-      },
+        console.error(err);
 
-      quote:
-      "Perform your duty with devotion and without attachment."
+        res.status(500).json({
+            error: "Unable to load verse"
+        });
 
-    });
-
-
-  } catch (err) {
-
-    console.error("HOME ERROR:", err);
-
-    res.status(500).json({
-      error: "Unable to load home data"
-    });
-
-  }
+    }
 
 });
 
