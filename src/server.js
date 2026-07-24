@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import { askGita } from "./rag/chat.js";
 import { getVerseOfTheDay } from "./rag/home.js";
+import ekadashiData from "./data/ekadashi.json" with { type: "json" };
 
 const app = express();
 
@@ -72,6 +73,22 @@ app.get("/home", async (req, res) => {
         });
 
     }
+
+});
+app.get("/ekadashi", (req, res) => {
+
+    const today = new Date();
+
+    const upcoming = ekadashiData.ekadashi.find(item => {
+
+        return new Date(item.date) >= today;
+
+    });
+
+
+    res.json(
+        upcoming || ekadashiData.ekadashi[0]
+    );
 
 });
 
