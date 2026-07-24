@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.post("/ask", async (req, res) => {
   try {
-    const answer = await chat(req.body.question);
+    const answer = await askGita(req.body.question);
     res.json(answer);
   } catch (err) {
     console.error("ASK ERROR:", err);
