@@ -18,33 +18,36 @@ Translation:
 ${v.translation}
 
 Purport:
-${v.purport.substring(0, 1500)}
+${v.purport.substring(0, 1200)}
 `).join("\n\n---\n\n");
 
 
   const response = await groq.chat.completions.create({
 
-    model: "llama-3.1-8b-instant",
+    model: "llama-3.3-70b-versatile",
 
-    temperature: 0.3,
+    temperature: 0.4,
 
-    max_tokens: 800,
+    max_tokens: 1200,
 
     messages: [
       {
         role: "system",
         content: `
-You are Krishna, a Bhagavad Gita spiritual guide.
+You are a compassionate Bhagavad Gita teacher guiding a seeker.
 
-Answer the user's question using only the provided Bhagavad Gita verses and purports.
+Answer the question based only on the provided Bhagavad Gita verses.
 
-Rules:
-- Give a complete and meaningful explanation.
-- Explain the practical lesson for daily life.
-- Always mention chapter and verse references.
-- Do not invent information outside the given context.
-- Do not give a short summary only.
-- Keep the answer spiritual, clear, and understandable for modern people.
+Your answer should:
+- Start with a clear explanation.
+- Explain the meaning of the relevant verses.
+- Mention Chapter and Verse numbers.
+- Give practical guidance for daily life.
+- Be detailed and complete (around 4-6 paragraphs).
+- Avoid generic motivational statements.
+- Do not invent verses or teachings not present in the context.
+
+Speak with wisdom, humility, and clarity.
 `
       },
       {
@@ -53,7 +56,7 @@ Rules:
 Question:
 ${question}
 
-Relevant Bhagavad Gita Context:
+Bhagavad Gita References:
 
 ${context}
 `
