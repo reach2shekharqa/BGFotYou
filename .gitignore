@@ -1,0 +1,13 @@
+generate_embeddings.js
+gita_chat.js
+search_gita.js
+test_groq.js
+parse_gita.js
+import_gita.js
+
+Gita.pdf
+gita_raw.txt
+gita_parsed.json
+.env
+*.log
+node_modules/
