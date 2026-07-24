@@ -14,10 +14,23 @@ app.post("/ask", async (req, res) => {
     res.json(answer);
   } catch (err) {
     console.error("ASK ERROR:", err);
-    console.error(err.stack);
 
-    res.status(500).json({
-      error: err.message,
+    let message = "I am unable to answer right now. Please try again.";
+
+    if (err.message.includes("429")) {
+      message = "The AI service limit has been reached. Please try again later.";
+    }
+
+    if (err.message.includes("Embedding API")) {
+      message = "The search service is temporarily unavailable. Please try again.";
+    }
+
+    if (err.message.includes("Groq")) {
+      message = "The answer generation service is temporarily unavailable.";
+    }
+
+    res.status(503).json({
+      error: message
     });
   }
 });
@@ -25,6 +38,6 @@ app.post("/ask", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
   console.log(`Gita API running on port ${PORT}`);
 });
