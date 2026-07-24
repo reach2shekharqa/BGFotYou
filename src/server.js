@@ -42,6 +42,46 @@ app.post("/ask", async (req, res) => {
   }
 });
 
+app.get("/home", async (req, res) => {
+
+  try {
+
+    res.json({
+
+      verseOfDay: {
+
+        chapter: 2,
+
+        verse: 47,
+
+        sanskrit:
+        "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन",
+
+        translation:
+        "You have the right to perform your duty, but not to the fruits of action.",
+
+        message:
+        "Focus on your actions and surrender the results."
+
+      },
+
+      quote:
+      "Perform your duty with devotion and without attachment."
+
+    });
+
+
+  } catch (err) {
+
+    console.error("HOME ERROR:", err);
+
+    res.status(500).json({
+      error: "Unable to load home data"
+    });
+
+  }
+
+});
 
 const PORT = process.env.PORT || 3000;
 
