@@ -17,10 +17,20 @@ app.get("/health", (req,res)=>{
 
 
 app.post("/ask", async (req, res) => {
+
   try {
-    const answer = await askGita(req.body.question);
+
+    const { question, language } = req.body;
+
+    const answer = await askGita(
+      question,
+      language || "en"
+    );
+
     res.json(answer);
+
   } catch (err) {
+
     console.error("ASK ERROR:", err);
 
     let message = "I am unable to answer right now. Please try again.";
@@ -40,7 +50,9 @@ app.post("/ask", async (req, res) => {
     res.status(503).json({
       error: message
     });
+
   }
+
 });
 
 app.get("/home", async (req, res) => {
