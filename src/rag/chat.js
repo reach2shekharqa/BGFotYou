@@ -8,7 +8,7 @@ const groq = new Groq({
 
 
 
-export async function askGita(question, language = "en") {
+export async function askGita(question, language = "en", history = []) {
 
 
   console.log("ASK START");
@@ -59,25 +59,19 @@ ${v.purport.substring(0, 800)}
 
 
 
-  if(responseLanguage === "Hindi"){
-
+  if (responseLanguage === "Hindi") {
 
     systemPrompt = `
 
-आप भगवान श्रीकृष्ण के भगवद्गीता ज्ञान के करुणामय मार्गदर्शक हैं।
-
-आपका उत्तर केवल हिन्दी (देवनागरी) में होना चाहिए।
-
-नियम:
-
-- प्रश्न किसी भी भाषा में हो सकता है, लेकिन उत्तर हिन्दी में दें।
-- अंग्रेजी शब्दों का प्रयोग न करें।
-- अध्याय और श्लोक संख्या जैसे BG 2.47 लिख सकते हैं।
-- दिए गए भगवद्गीता संदर्भों के आधार पर ही उत्तर दें।
-- श्लोक का सरल अर्थ समझाएं।
-- दैनिक जीवन में उपयोगी मार्गदर्शन दें।
-- उत्तर स्पष्ट, शांत और आध्यात्मिक भाषा में दें।
-- काल्पनिक श्लोक या जानकारी न बनाएं।
+आप भगवद्गीता के एक मार्गदर्शक और शिक्षक हैं।
+आपका उत्तर केवल निम्नलिखित भगवद्गीता संदर्भों पर आधारित होना चाहिए。
+बाहरी ज्ञान, अन्य ग्रंथ, या सामान्य जीवन सलाह का उपयोग न करें。
+यदि प्रश्न भगवद्गीता से संबंधित नहीं है, तो केवल यह लिखें:
+"I can only answer questions related to the Bhagavad Gita."
+यदि प्रश्न को भगवद्गीता की शिक्षाओं (धर्म, कर्म, योग, त्याग, भक्ती, श्रीकृष्ण, अर्जुन) के अनुसार समझा जा सकता है, तो उसी दृष्टिकोण से उत्तर दें。
+यदि संदर्भ उपलब्ध नहीं हैं, तो सामान्य उत्तर न दें。
+उत्तर स्पष्ट, शांत और आध्यात्मिक भाषा में दें。
+अवास्तविक श्लोक या जानकारी न बनाएं।
 
 `;
 
@@ -89,18 +83,16 @@ ${v.purport.substring(0, 800)}
 
     systemPrompt = `
 
-You are a compassionate Bhagavad Gita teacher guiding a seeker.
-
-Answer ONLY in English.
-
-Rules:
-
-- Base your answer only on provided Bhagavad Gita references.
-- Explain relevant Chapter and Verse numbers.
-- Explain practical meaning for daily life.
-- Give clear spiritual guidance.
-- Do not invent verses or teachings.
-- Keep the answer detailed and meaningful.
+You are a Bhagavad Gita assistant.
+Your job is to understand the user's intent and answer only from the provided Bhagavad Gita references.
+Do not use outside knowledge, other scriptures, or general life advice.
+If the question is not related to the Bhagavad Gita, reply exactly:
+"I can only answer questions related to the Bhagavad Gita."
+If the question can be interpreted through Gita teachings (dharma, karma, duty, detachment, yoga, Krishna, Arjuna, devotion), answer from that perspective.
+If no relevant references are available, do not attempt a generic answer.
+Mention chapter and verse numbers from the provided context.
+Do not invent verses or details.
+Keep the answer detailed and meaningful.
 
 `;
 
@@ -135,6 +127,9 @@ Rules:
       },
 
 
+      ...history,
+
+
       {
         role: "user",
         content: `
@@ -152,6 +147,8 @@ Bhagavad Gita References:
 ${context}
 
 
+If the question is not related to the Bhagavad Gita, reply exactly:
+"I can only answer questions related to the Bhagavad Gita."
 Generate the final answer now.
 
 `
